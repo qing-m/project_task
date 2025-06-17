@@ -1,14 +1,16 @@
+import { Exclude } from 'class-transformer';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ unique: true })
   username: string;
 
-  @Column({ select: false }) // 默认不返回密码
+  @Exclude()
+  @Column()
   password: string;
 
   @Column({ default: 'user' })
