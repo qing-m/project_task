@@ -1,7 +1,10 @@
 import * as bcrypt from 'bcrypt';
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
+import { isNil } from 'lodash';
+
 import { UserEntity } from './entities/user.entity';
 import { RegisterDto } from '../auth/dto/register-auth.dto';
 
@@ -25,5 +28,11 @@ export class UserService {
       password: hashedPassword,
     });
     return await this.userRepository.save(user);
+  }
+
+  async exist(username: string) {
+    const user = await this.userRepository.findOneBy({ username });
+    if (isNil(user)) throw new ConflictException('用户不存在');
+    return true;
   }
 }
